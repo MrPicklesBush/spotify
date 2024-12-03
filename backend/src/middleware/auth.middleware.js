@@ -7,7 +7,7 @@ export const protectRoute = async (req, res, next) => {
     next();
 }
 
-export const requireAdmiin = async (req, res, next) => {
+export const requireAdmin = async (req, res, next) => {
     try {
         const currentUser = await clerkClient.users.getUser(req.auth.userId)
         const isAdmin = process.env.ADMIN_USERNAME === currentUser.username;
@@ -18,6 +18,6 @@ export const requireAdmiin = async (req, res, next) => {
 
         next();
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error })
+        next(error)
     }
 }
