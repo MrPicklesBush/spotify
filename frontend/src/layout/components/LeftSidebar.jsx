@@ -7,7 +7,7 @@ import { HomeIcon, Library, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const LeftSidebar = () => {
-    const isLoading = true;
+    const isLoading = false;
     return (
         <div className="h-full flex flex-col gap-2">
             {/* Navigation menu */}
