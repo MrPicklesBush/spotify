@@ -21,3 +21,30 @@ export const getAllUsers = async (req, res, next) => {
     }
 };
 
+export const getMessages = async (req, res, next) => {
+    try {
+        const connection = await connectDB();
+        const myId = req.auth.userId;
+        const { userId } = req.params;
+
+        const query = `
+            SELECT * FROM Message
+            WHERE 
+                (senderId = ? AND receiverId = ?) OR 
+                (senderId = ? AND receiverId = ?)
+            ORDER BY createdAt ASC
+        `;
+        connection.query(query, [userId, myId, myId, userId], (err, results) => {
+            connection.end(); // Close the connection
+            if (err) {
+                console.error("Error fetching messages:", err);
+                return next(err);
+            }
+
+            res.status(200).json(results);
+        });
+    } catch (error) {
+        console.error("Error in getMessages:", error);
+        next(error);
+    }
+};

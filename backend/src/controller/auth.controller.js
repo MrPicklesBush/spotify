@@ -1,21 +1,15 @@
 import { connectDB } from "../lib/db.js";
-import bcrypt from "bcrypt";
 
 export const authCallback = async (req, res, next) => {
   try {
-    const { id: clerkId, username, password, imageUrl } = req.body;
-
-    // Validate input
-    if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required." });
-    }
+    const { id, firstName, lastName, imageUrl } = req.body;
 
     // Connect to the database
     const db = await connectDB();
 
-    // Check if the user already exists by username
-    const checkUserQuery = `SELECT * FROM User WHERE username = ?`;
-    db.query(checkUserQuery, [username], async (err, rows) => {
+    // Check if the user already exists
+    const query = `SELECT * FROM User WHERE clerkId = ?`;
+    db.query(query, [id], (err, rows) => {
       if (err) {
         console.error("Database error:", err);
         return next(err);
@@ -23,16 +17,17 @@ export const authCallback = async (req, res, next) => {
 
       if (rows.length === 0) {
         // Signup: Insert a new user into the database
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-        const defaultImageUrl = imageUrl || "https://clerk.dev/static/default-avatar.png"; // Use provided image or default
-
         const insertQuery = `
-          INSERT INTO User (username, password, clerkId, imageUrl)
-          VALUES (?, ?, ?, ?)
+          INSERT INTO User (clerkId, fullName, imageUrl)
+          VALUES (?, ?, ?)
         `;
         db.query(
           insertQuery,
-          [username, hashedPassword, clerkId || null, defaultImageUrl],
+          [
+            id,
+            `${firstName || ""} ${lastName || ""}`.trim(),
+            imageUrl,
+          ],
           (err, result) => {
             if (err) {
               console.error("Insert error:", err);
@@ -40,7 +35,7 @@ export const authCallback = async (req, res, next) => {
             }
 
             // Respond after inserting the user
-            res.status(200).json({ success: true, message: "User registered successfully." });
+            res.status(200).json({ success: true });
           }
         );
       } else {
@@ -49,7 +44,7 @@ export const authCallback = async (req, res, next) => {
       }
     });
   } catch (error) {
-    console.error("Error in auth callback", error);
+    console.log("Error in auth callback", error);
     next(error);
   }
 };
