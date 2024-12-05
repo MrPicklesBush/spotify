@@ -1,6 +1,6 @@
 // Template for a Song object
 export const Song = {
-	_id: "",
+	id: "",
 	title: "",
 	artist: "",
 	albumId: null, // Can be null or a string
@@ -13,7 +13,7 @@ export const Song = {
 
 // Template for an Album object
 export const Album = {
-	_id: "",
+	id: "",
 	title: "",
 	artist: "",
 	imageUrl: "",
@@ -31,7 +31,7 @@ export const Stats = {
 
 // Template for a Message object
 export const Message = {
-	_id: "",
+	id: "",
 	senderId: "",
 	receiverId: "",
 	content: "",
@@ -41,7 +41,7 @@ export const Message = {
 
 // Template for a User object
 export const User = {
-	_id: "",
+	id: "",
 	clerkId: "",
 	fullName: "",
 	imageUrl: ""
