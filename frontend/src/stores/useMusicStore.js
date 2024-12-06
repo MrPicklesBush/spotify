@@ -8,8 +8,8 @@ export const useMusicStore = create((set) => ({
   isLoading: false,
   error: null,
   currentAlbum: null,
-  madeForYouSongs: [],
   featuredSongs: [],
+  madeForYouSongs: [],
   trendingSongs: [],
   stats: {
     totalSongs: 0,
